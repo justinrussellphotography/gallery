@@ -35,7 +35,10 @@ class CreateInitialTables extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->uuidMorphs('itemable');
+            $table->foreignUuid('photo_id');
+            $table->foreignId('product_id');
             $table->unsignedDecimal('price', 6, 2);
+            $table->unsignedInteger('quantity');
             $table->json('options')->nullable();
             $table->timestamps();
         });

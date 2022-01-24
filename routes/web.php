@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\PhotoController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,15 +18,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [CollectionController::class, 'index']);
-Route::get('/collection/{collection:slug}', [CollectionController::class, 'view'])->where('slug', '[A-Za-z0-9\-]+');
-Route::get('/collection/{collection:slug}/{photo:slug}', [PhotoController::class, 'view'])->where('slug', '[A-Za-z0-9\-]+');
-Route::get('/cart', [CartController::class, 'view']);
+Route::get('/collections/{collection:slug}', [CollectionController::class, 'show'])->where('slug', '[A-Za-z0-9\-]+');
+Route::get('/collections/{collection:slug}/{photo:slug}', [PhotoController::class, 'show'])->where('slug', '[A-Za-z0-9\-]+');
+Route::get('/cart', [CartController::class, 'show']);
 Route::get('/thanks', function () {
     return view('orders.thanks');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::prefix('admin')->name('admin.')
+    ->middleware(['auth'])
+    ->group(function()
+    {
+	    // https://laravel.com/docs/8.x/controllers#actions-handled-by-resource-controller
+	    Route::resources([
+		    'collections' => \App\Http\Controllers\Admin\CollectionController::class,
+		    'photos' => \App\Http\Controllers\Admin\PhotoController::class,
+		    'products' => \App\Http\Controllers\Admin\ProductController::class,
+	    ]);
+    });
 
 require __DIR__.'/auth.php';
