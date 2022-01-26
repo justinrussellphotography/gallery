@@ -16,7 +16,9 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        return view('admin.collections.index');
+        return view('admin.collections.index', [
+	        'collections' => Collection::with('photos')->get(),
+        ]);
     }
 
     /**
@@ -26,7 +28,7 @@ class CollectionController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.collections.create');
     }
 
     /**
@@ -48,7 +50,9 @@ class CollectionController extends Controller
      */
     public function show(Collection $collection)
     {
-        //
+        return view('admin.collections.show', [
+	        'collection' => $collection,
+        ]);
     }
 
     /**
@@ -59,7 +63,9 @@ class CollectionController extends Controller
      */
     public function edit(Collection $collection)
     {
-        //
+        return view('admin.collections.edit', [
+	        'collection' => $collection,
+        ]);
     }
 
     /**

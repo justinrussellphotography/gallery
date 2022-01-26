@@ -50,8 +50,11 @@ class CreateInitialTables extends Migration
         });
         Schema::create('photos', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignId('collection_id');
             $table->string('name')->nullable();
             $table->string('slug')->unique()->nullable();
+            $table->unsignedSmallInteger('width');
+            $table->unsignedSmallInteger('height');
             $table->timestamps();
         });
         Schema::create('products', function (Blueprint $table) {

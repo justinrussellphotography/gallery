@@ -9,6 +9,10 @@ class Collection extends Model
 {
     use HasFactory;
     
+	protected $casts = [
+	    'date' => 'datetime:Y-m-d',
+	];
+    
     public function photos() {
         return $this->hasMany(Photo::class);
     }
