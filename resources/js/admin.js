@@ -12,7 +12,13 @@ import Dropzone from 'dropzone';
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 	if (document.getElementById('fileUpload')) {
-		let photoDropzone = new Dropzone('#fileUpload');
+		let token = document.head.querySelector('meta[name="crsf-token"]');
+		let photoDropzone = new Dropzone('#fileUpload', {
+			headers: {
+				'X-CSRF-TOKEN': token.content,
+				'X-Requested-With': 'XMLHttpRequest'
+			}
+		});
 	}
 });
 

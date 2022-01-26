@@ -7,6 +7,9 @@ use App\Http\Requests\StorePhotoRequest;
 use App\Http\Requests\UpdatePhotoRequest;
 use App\Models\Photo;
 
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
+
 class PhotoController extends Controller
 {
     /**
@@ -26,7 +29,7 @@ class PhotoController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -37,7 +40,25 @@ class PhotoController extends Controller
      */
     public function store(StorePhotoRequest $request)
     {
-        //
+        $file = $request->file('file');
+        
+        list($originalName) = explode('.', $file->getClientOriginalName());
+        $path = $file->store('photos');
+        
+        list($width, $height) = getimagesize(Storage::path($path));
+        
+        $photo = new Photo;
+        $photo->forceFill([
+	        'collection_id' => $request->input('collection_id'),
+	        'name' => $originalName,
+	        'slug' => preg_replace('/[^[:alnum:]-]+/', '-', strtolower($originalName)),
+	        'path' => $path,
+	        'width' => $width,
+	        'height' => $height,
+        ]);
+        $photo->save();
+        
+        return Response::json('success', 200);
     }
 
     /**
